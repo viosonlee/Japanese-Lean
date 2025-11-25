@@ -1,0 +1,5 @@
+{
+  "name": "N5 Master",
+  "description": "A mobile-first Japanese N5 learning application with TTS, vocabulary, grammar, and reading practice.",
+  "requestFramePermissions": []
+}
