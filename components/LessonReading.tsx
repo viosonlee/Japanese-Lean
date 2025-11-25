@@ -5,15 +5,16 @@ import { IconTranslate, IconPlay, IconStop, IconVolume } from './ui/Icons';
 
 interface Props {
   data: ReadingSection[];
+  lessonId: number;
 }
 
-export const LessonReading: React.FC<Props> = ({ data }) => {
+export const LessonReading: React.FC<Props> = ({ data, lessonId }) => {
   const [activeSectionId, setActiveSectionId] = useState<string>(data[0].id);
   const activeSection = data.find(d => d.id === activeSectionId) || data[0];
 
   return (
     <div className="flex flex-col pb-32 min-h-full">
-        {/* Section Switcher - Sticky to the top of the scrolling main container */}
+        {/* Section Switcher */}
         <div className="flex overflow-x-auto p-2 space-x-2 bg-white sticky top-0 z-20 border-b border-gray-100 no-scrollbar shrink-0">
             {data.map(section => (
                 <button
@@ -30,26 +31,25 @@ export const LessonReading: React.FC<Props> = ({ data }) => {
             ))}
         </div>
 
-        <ReadingPlayer key={activeSectionId} section={activeSection} />
+        <ReadingPlayer key={activeSectionId} section={activeSection} lessonId={lessonId} />
     </div>
   );
 };
 
-const ReadingPlayer: React.FC<{ section: ReadingSection }> = ({ section }) => {
+const ReadingPlayer: React.FC<{ section: ReadingSection, lessonId: number }> = ({ section, lessonId }) => {
     const { speak, speakSequence, stop, state } = useTTS();
-    const [rate, setRate] = useState(0.8);
     const [showAllTranslations, setShowAllTranslations] = useState(false);
     const [isPlayerExpanded, setIsPlayerExpanded] = useState(false);
 
     // Auto-scroll to active sentence
     useEffect(() => {
-        if (state.currentSentenceId) {
-            const el = document.getElementById(`sentence-${state.currentSentenceId}`);
+        if (state.currentId) {
+            const el = document.getElementById(`sentence-${state.currentId}`);
             if (el) {
                 el.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }
         }
-    }, [state.currentSentenceId]);
+    }, [state.currentId]);
 
     // Cleanup on unmount
     useEffect(() => {
@@ -61,8 +61,12 @@ const ReadingPlayer: React.FC<{ section: ReadingSection }> = ({ section }) => {
         if (state.isPlaying) {
             stop();
         } else {
-            const sequence = section.content.map(s => ({ id: s.id, text: s.japanese }));
-            speakSequence(sequence, rate);
+            const sequence = section.content.map(s => ({ 
+                id: s.id, 
+                text: s.japanese,
+                filename: `L${lessonId}_${section.id}_${s.id}`
+            }));
+            speakSequence(sequence);
         }
     };
 
@@ -75,9 +79,12 @@ const ReadingPlayer: React.FC<{ section: ReadingSection }> = ({ section }) => {
                         key={sentence.id}
                         sentence={sentence}
                         type={section.type}
-                        isActive={state.currentSentenceId === sentence.id}
+                        isActive={state.currentId === sentence.id}
                         globalShowTranslation={showAllTranslations}
-                        onPlay={() => speak(sentence.japanese, sentence.id, rate)}
+                        onPlay={() => {
+                            const filename = `L${lessonId}_${section.id}_${sentence.id}`;
+                            speak(sentence.japanese, sentence.id, filename);
+                        }}
                     />
                 ))}
             </div>
@@ -92,7 +99,6 @@ const ReadingPlayer: React.FC<{ section: ReadingSection }> = ({ section }) => {
                     // Expanded Player
                     <div className="bg-white rounded-2xl shadow-2xl border border-gray-100 p-4 animate-in slide-in-from-bottom-5">
                         <div className="flex items-center justify-between gap-4">
-                            {/* Collapse Button (Invisible click area on bg strictly, but here we use an icon or tap outside logic usually. simplified here) */}
                             <button 
                                 onClick={() => setIsPlayerExpanded(false)}
                                 className="text-gray-400 p-2 hover:bg-gray-100 rounded-full"
@@ -102,22 +108,10 @@ const ReadingPlayer: React.FC<{ section: ReadingSection }> = ({ section }) => {
                                 </svg>
                             </button>
 
-                            {/* Rate Control */}
-                            <div className="flex items-center space-x-2 bg-gray-50 px-3 py-1.5 rounded-lg flex-1">
-                                <span className="text-xs text-gray-500 font-bold whitespace-nowrap">语速</span>
-                                <input 
-                                    type="range" 
-                                    min="0.5" 
-                                    max="1.2" 
-                                    step="0.1" 
-                                    value={rate}
-                                    onChange={(e) => setRate(parseFloat(e.target.value))}
-                                    className="w-full h-1 bg-gray-300 rounded-lg appearance-none cursor-pointer"
-                                />
-                                <span className="text-xs text-gray-700 w-8 text-right">{rate}x</span>
+                            <div className="flex-1 text-center text-xs text-gray-400 font-medium">
+                                {state.isPlaying ? '播放中...' : '准备就绪'}
                             </div>
 
-                            {/* Toggle Translation */}
                             <button 
                                 onClick={() => setShowAllTranslations(!showAllTranslations)}
                                 className={`p-2 rounded-full ${showAllTranslations ? 'text-primary bg-primary/10' : 'text-gray-400'}`}
@@ -125,7 +119,6 @@ const ReadingPlayer: React.FC<{ section: ReadingSection }> = ({ section }) => {
                                 <IconTranslate className="w-6 h-6" />
                             </button>
 
-                            {/* Play Button */}
                             <button 
                                 onClick={handlePlayAll}
                                 className={`flex items-center justify-center w-12 h-12 rounded-full text-white shadow-lg transition-transform active:scale-95 ${
@@ -157,7 +150,7 @@ const ReadingPlayer: React.FC<{ section: ReadingSection }> = ({ section }) => {
                 )}
             </div>
             
-            {/* Backdrop for expanded state */}
+            {/* Backdrop */}
             {isPlayerExpanded && (
                 <div 
                     className="fixed inset-0 bg-black/20 z-20 backdrop-blur-[1px]" 

@@ -53,9 +53,9 @@ export const LessonDetailView: React.FC<Props> = ({ lesson, onBack }) => {
 
       {/* Main Content */}
       <main className="flex-1 overflow-y-auto no-scrollbar relative">
-        {activeTab === 'vocab' && <LessonVocabulary data={lesson.vocabularies} />}
+        {activeTab === 'vocab' && <LessonVocabulary data={lesson.vocabularies} lessonId={lesson.id} />}
         {activeTab === 'grammar' && <LessonGrammar data={lesson.grammars} />}
-        {activeTab === 'reading' && <LessonReading data={lesson.readings} />}
+        {activeTab === 'reading' && <LessonReading data={lesson.readings} lessonId={lesson.id} />}
         {activeTab === 'quiz' && <LessonPractice data={lesson.quizzes} />}
       </main>
     </div>

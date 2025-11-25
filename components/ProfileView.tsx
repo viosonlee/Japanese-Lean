@@ -1,5 +1,6 @@
 import React from 'react';
 import { IconChevronDown } from './ui/Icons';
+import { downloadAudioConfig } from '../utils/audioGenerator';
 
 export const ProfileView: React.FC = () => {
   return (
@@ -15,7 +16,18 @@ export const ProfileView: React.FC = () => {
        </div>
 
        <div className="space-y-1">
-         {['通用设置', '音频设置', '重置进度', '关于应用', '帮助与反馈'].map((item, idx) => (
+         <div 
+            onClick={downloadAudioConfig}
+            className="bg-white p-4 flex justify-between items-center active:bg-gray-50 cursor-pointer border-b border-gray-50"
+         >
+            <div>
+                <span className="text-sm text-primary font-bold">导出音频生成配置</span>
+                <p className="text-xs text-gray-400 mt-1">下载 JSON 文件以配合 Python 脚本生成高质量 MP3</p>
+            </div>
+            <IconChevronDown className="w-4 h-4 text-gray-300 -rotate-90" />
+         </div>
+
+         {['通用设置', '重置进度', '关于应用', '帮助与反馈'].map((item, idx) => (
              <div key={idx} className="bg-white p-4 flex justify-between items-center active:bg-gray-50 cursor-pointer border-b border-gray-50">
                 <span className={`text-sm ${item === '重置进度' ? 'text-danger' : 'text-gray-700'}`}>{item}</span>
                 <IconChevronDown className="w-4 h-4 text-gray-300 -rotate-90" />
