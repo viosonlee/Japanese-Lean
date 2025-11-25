@@ -3,8 +3,6 @@ import { N5_LESSONS } from './constants';
 import { LessonList } from './components/LessonList';
 import { LessonDetailView } from './components/LessonDetailView';
 import { LoginView } from './components/LoginView';
-import { downloadAudioConfig } from './utils/audioGenerator';
-import { IconDownload } from './components/ui/Icons';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
@@ -52,16 +50,8 @@ function App() {
         <div className="flex-1 flex flex-col overflow-hidden">
             {!selectedLessonId && (
                 <>
-                     <header className="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-gray-100 px-4 h-12 flex items-center justify-between shrink-0">
-                        <div className="w-8"></div> {/* Spacer for alignment */}
+                     <header className="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-gray-100 px-4 h-12 flex items-center justify-center shrink-0">
                         <h1 className="font-bold text-gray-800">日语 N5 学习</h1>
-                        <button 
-                            onClick={downloadAudioConfig}
-                            className="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-primary active:bg-gray-100 rounded-full transition-colors"
-                            title="下载音频生成配置"
-                        >
-                            <IconDownload className="w-5 h-5" />
-                        </button>
                     </header>
                     <main className="flex-1 overflow-y-auto no-scrollbar">
                         <LessonList onSelect={handleLessonSelect} />
