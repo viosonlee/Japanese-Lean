@@ -4,9 +4,10 @@ import { IconChevronDown } from './ui/Icons';
 
 interface Props {
   onSelect: (id: number) => void;
+  onOpenDrill: () => void;
 }
 
-export const LessonList: React.FC<Props> = ({ onSelect }) => {
+export const LessonList: React.FC<Props> = ({ onSelect, onOpenDrill }) => {
   const [lastLessonId, setLastLessonId] = useState<number>(1);
   const [progressPercent, setProgressPercent] = useState(0);
 
@@ -51,6 +52,22 @@ export const LessonList: React.FC<Props> = ({ onSelect }) => {
         <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-10 -mt-10 blur-2xl"></div>
         <div className="absolute bottom-0 left-0 w-24 h-24 bg-blue-400/20 rounded-full -ml-10 -mb-10 blur-xl"></div>
       </div>
+
+      <button
+        type="button"
+        onClick={onOpenDrill}
+        className="w-full text-left bg-gradient-to-br from-violet-600 to-indigo-600 rounded-2xl p-5 text-white shadow-lg active:scale-[0.98] transition-transform relative overflow-hidden"
+      >
+        <div className="relative z-10 flex items-center justify-between gap-4">
+          <div>
+            <div className="text-xs font-bold text-violet-200 uppercase tracking-wider">专项训练</div>
+            <h2 className="text-xl font-bold mt-1">2000 题刷题中心</h2>
+            <p className="text-sm text-white/80 mt-1">词汇・语法・课文・错题复习</p>
+          </div>
+          <div className="w-14 h-14 rounded-2xl bg-white/15 flex items-center justify-center text-2xl shrink-0">✍️</div>
+        </div>
+        <div className="absolute -right-8 -bottom-12 w-32 h-32 rounded-full bg-white/10" />
+      </button>
 
       <h3 className="text-lg font-bold text-gray-800 ml-1">课程目录</h3>
       

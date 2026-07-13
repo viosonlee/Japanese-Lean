@@ -58,5 +58,17 @@ export interface Lesson {
   quizzes: Quiz[]; // Maps to Mondai/Renchuu
 }
 
+export type DrillQuestionType = 'vocabulary' | 'grammar' | 'reading' | 'quiz';
+
+export interface DrillQuestion {
+  id: string;
+  lessonId: number;
+  type: DrillQuestionType;
+  prompt: string;
+  options: string[];
+  correctIndex: number;
+  explanation: string;
+}
+
 // Navigation Types
 export type TabType = 'vocab' | 'grammar' | 'reading' | 'quiz';

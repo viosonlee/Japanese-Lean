@@ -3,10 +3,12 @@ import { N5_LESSONS } from './constants';
 import { LessonList } from './components/LessonList';
 import { LessonDetailView } from './components/LessonDetailView';
 import { LoginView } from './components/LoginView';
+import { DrillCenter } from './components/DrillCenter';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [selectedLessonId, setSelectedLessonId] = useState<number | null>(null);
+  const [activeView, setActiveView] = useState<'lessons' | 'drill'>('lessons');
 
   // Check auth on mount
   useEffect(() => {
@@ -41,6 +43,11 @@ function App() {
     setSelectedLessonId(null);
   };
 
+  const handleOpenDrill = () => {
+    setSelectedLessonId(null);
+    setActiveView('drill');
+  };
+
   if (!isAuthenticated) {
     return <LoginView onLogin={handleLogin} />;
   }
@@ -52,19 +59,23 @@ function App() {
         
         {/* Main Content Area */}
         <div className="flex-1 flex flex-col overflow-hidden">
-            {!selectedLessonId && (
+            {activeView === 'lessons' && !selectedLessonId && (
                 <>
                      <header className="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-gray-100 px-4 h-12 flex items-center justify-center shrink-0">
                         <h1 className="font-bold text-gray-800">日语 N5 学习</h1>
                     </header>
                     <main className="flex-1 overflow-y-auto no-scrollbar">
-                        <LessonList onSelect={handleLessonSelect} />
+                        <LessonList onSelect={handleLessonSelect} onOpenDrill={handleOpenDrill} />
                     </main>
                 </>
             )}
 
-            {selectedLessonId && currentLessonData && (
+            {activeView === 'lessons' && selectedLessonId && currentLessonData && (
                 <LessonDetailView lesson={currentLessonData} onBack={handleBackToList} />
+            )}
+
+            {activeView === 'drill' && (
+                <DrillCenter onBack={() => setActiveView('lessons')} />
             )}
         </div>
       </div>
