@@ -5,6 +5,15 @@ interface TTSState {
   currentId: string | null;
 }
 
+const findJapaneseVoice = (voices: SpeechSynthesisVoice[]) => {
+  const japaneseVoices = voices.filter(voice => voice.lang.toLowerCase().startsWith('ja'));
+
+  return japaneseVoices.find(voice => voice.lang.toLowerCase() === 'ja-jp')
+    ?? japaneseVoices.find(voice => /japanese|日本/i.test(voice.name))
+    ?? japaneseVoices[0]
+    ?? null;
+};
+
 export const useTTS = () => {
   const [state, setState] = useState<TTSState>({
     isPlaying: false,
@@ -13,13 +22,22 @@ export const useTTS = () => {
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const synthesisRef = useRef<SpeechSynthesis>(window.speechSynthesis);
+  const japaneseVoiceRef = useRef<SpeechSynthesisVoice | null>(null);
   const playbackControllerRef = useRef<AbortController | null>(null);
 
   // Initialize Audio Object
   useEffect(() => {
     audioRef.current = new Audio();
+    const loadJapaneseVoice = () => {
+      japaneseVoiceRef.current = findJapaneseVoice(synthesisRef.current.getVoices());
+    };
+
+    loadJapaneseVoice();
+    synthesisRef.current.addEventListener('voiceschanged', loadJapaneseVoice);
+
     // iOS Safari requires audio context handling usually, but simple Audio tag often works for click events
     return () => {
+      synthesisRef.current.removeEventListener('voiceschanged', loadJapaneseVoice);
       if (audioRef.current) {
         audioRef.current.pause();
         audioRef.current = null;
@@ -57,8 +75,8 @@ export const useTTS = () => {
         utterance.lang = 'ja-JP';
         utterance.rate = 0.8;
 
-        const voices = synthesisRef.current.getVoices();
-        const jaVoice = voices.find(v => v.lang.includes('ja') || v.lang.includes('JP'));
+        const jaVoice = japaneseVoiceRef.current
+          ?? findJapaneseVoice(synthesisRef.current.getVoices());
         if (jaVoice) utterance.voice = jaVoice;
 
         const finish = () => {
