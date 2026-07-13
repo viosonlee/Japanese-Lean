@@ -58,12 +58,5 @@ export interface Lesson {
   quizzes: Quiz[]; // Maps to Mondai/Renchuu
 }
 
-export interface UserProgress {
-  user_id: string;
-  item_id: string;
-  status: 'new' | 'learning' | 'mastered';
-  updated_at: string;
-}
-
 // Navigation Types
 export type TabType = 'vocab' | 'grammar' | 'reading' | 'quiz';

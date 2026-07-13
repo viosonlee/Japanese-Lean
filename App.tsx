@@ -27,6 +27,10 @@ function App() {
     : null;
 
   const handleLessonSelect = (id: number) => {
+    if (!N5_LESSONS.some(lesson => lesson.id === id)) {
+      return;
+    }
+
     setSelectedLessonId(id);
     // Save progress
     localStorage.setItem('n5_last_lesson_id', id.toString());

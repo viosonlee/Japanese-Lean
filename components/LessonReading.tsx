@@ -9,8 +9,18 @@ interface Props {
 }
 
 export const LessonReading: React.FC<Props> = ({ data, lessonId }) => {
-  const [activeSectionId, setActiveSectionId] = useState<string>(data[0].id);
-  const activeSection = data.find(d => d.id === activeSectionId) || data[0];
+  const [activeSectionId, setActiveSectionId] = useState<string>(data[0]?.id ?? '');
+  const activeSection = data.find(d => d.id === activeSectionId) ?? data[0];
+
+  useEffect(() => {
+    if (data.length > 0 && !data.some(section => section.id === activeSectionId)) {
+      setActiveSectionId(data[0].id);
+    }
+  }, [activeSectionId, data]);
+
+  if (!activeSection) {
+    return <div className="p-8 text-center text-gray-400">本课暂无课文</div>;
+  }
 
   return (
     <div className="flex flex-col pb-32 min-h-full">

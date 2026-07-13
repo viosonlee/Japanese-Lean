@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="N5 Master">
+  <rect width="512" height="512" rx="112" fill="#1989fa"/>
+  <circle cx="256" cy="256" r="170" fill="#ffffff" opacity="0.14"/>
+  <path d="M158 144h196c22 0 40 18 40 40v174c0 8-9 13-16 9-34-20-70-30-108-30h-28c-38 0-74 10-108 30-7 4-16-1-16-9V184c0-22 18-40 40-40Z" fill="#ffffff"/>
+  <path d="M256 161v176" stroke="#1989fa" stroke-width="18" stroke-linecap="round"/>
+  <path d="M154 184c34-13 68-17 102-10v163c-37-8-74-3-111 15V198c0-6 4-12 9-14Zm204 0c-34-13-68-17-102-10v163c37-8 74-3 111 15V198c0-6-4-12-9-14Z" fill="#eaf4ff"/>
+  <text x="256" y="278" text-anchor="middle" font-family="Arial, sans-serif" font-size="104" font-weight="700" fill="#1989fa">N5</text>
+</svg>

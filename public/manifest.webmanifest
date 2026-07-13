@@ -1,0 +1,21 @@
+{
+  "id": "./",
+  "name": "N5 Master - 日语学习",
+  "short_name": "N5 Master",
+  "description": "日语 N5 单词、语法、课文和练习学习应用",
+  "lang": "zh-CN",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f7f8fa",
+  "theme_color": "#1989fa",
+  "icons": [
+    {
+      "src": "./icons/app-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

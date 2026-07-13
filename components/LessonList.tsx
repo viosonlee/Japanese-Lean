@@ -12,9 +12,16 @@ export const LessonList: React.FC<Props> = ({ onSelect }) => {
 
   useEffect(() => {
     const storedId = localStorage.getItem('n5_last_lesson_id');
-    const id = storedId ? parseInt(storedId, 10) : 1;
+    const parsedId = storedId ? Number.parseInt(storedId, 10) : 1;
+    const id = N5_LESSONS.some(lesson => lesson.id === parsedId) ? parsedId : N5_LESSONS[0].id;
+
+    if (storedId && id !== parsedId) {
+      localStorage.removeItem('n5_last_lesson_id');
+    }
+
     setLastLessonId(id);
-    setProgressPercent(Math.round((id / N5_LESSONS.length) * 100));
+    const lessonIndex = N5_LESSONS.findIndex(lesson => lesson.id === id);
+    setProgressPercent(Math.round(((lessonIndex + 1) / N5_LESSONS.length) * 100));
   }, []);
 
   const lastLesson = N5_LESSONS.find(l => l.id === lastLessonId) || N5_LESSONS[0];
